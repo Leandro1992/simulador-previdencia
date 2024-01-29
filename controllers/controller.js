@@ -1,5 +1,5 @@
 const SimuladorRegressivo = require('./simulador-regressivo.js');
-const SimuladorProgressio = require('./simulador-progressivo.js');
+const Simulador = require('./simulador-progressivo.js');
 const AdmZip = require('adm-zip');
 const formidable = require('formidable');
 const util = require('../util/index.js');
@@ -7,8 +7,8 @@ const util = require('../util/index.js');
 exports.initControllers = (app) => {
 
     //SIMULAÇÃO REGRESSIVA
-    app.post('/api/simulador-regressivo', (req, res, next) => {
-        console.log('/api/simulador-regressivo')
+    app.post('/api/simulador', (req, res, next) => {
+        console.log('/api/simulador')
         const form = formidable({ multiples: true });
         form.parse(req, (err, fields, files) => {
             if (err) {
@@ -17,8 +17,11 @@ exports.initControllers = (app) => {
                 return;
             }
             console.log(fields, files)
-            SimuladorProgressio.simular(files, fields).then((result) => {
+            Simulador.simular(files, fields).then((result) => {
                 res.send({ data: result });
+            }).catch(err => {
+                console.log(err)
+                res.status(503).send({erro:"Falha ao processar cálculo"})
             })
         });
     });

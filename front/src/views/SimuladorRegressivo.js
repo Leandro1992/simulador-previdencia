@@ -11,10 +11,11 @@ import axios from 'axios';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
+import SimuladorProgressivo from './SimuladorProgressivo';
+// import FormControl from '@material-ui/core/FormControl';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Select from '@material-ui/core/Select';
+// import InputLabel from '@material-ui/core/InputLabel';
 
 
 const useStyles = makeStyles(theme => ({
@@ -42,19 +43,6 @@ function SimuladorRegressivo() {
 
     const classes = useStyles();
 
-    const [database, setDatabase] = useState("");
-    const [instituicao, setInstituicao] = useState("");
-    const [path, setPath] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [openSucesso, setOpenSucesso] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [remessa, setRemessa] = useState("");
-    const [ano, setAno] = useState("");
-    const [mes, setMes] = useState("");
-    const [nomeResp, setNomeResp] = useState("");
-    const [emailResp, setEmail] = useState("");
-    const [telResp, setTelResp] = useState("");
-
     const handleSaveXml = (filename, dataXml) => {
         let dataUrl = `data:application/xml;charset=utf-8,${dataXml}`
         let link = document.createElement('a');
@@ -63,22 +51,35 @@ function SimuladorRegressivo() {
         link.click();
     }
 
-    const resetForm = () => {
-        setDatabase("");
-        setInstituicao("");
-        setPath(null);
-        setOpen(false);
-        setRemessa("");
-        setAno("");
-        setNomeResp("");
-        setEmail("");
-        setAno("");
-        setTelResp("");
-    }
-
     const handleImageInput = event => {
         setPath(event.target.files[0])
     }
+
+    const resetForm = () => {
+        setDatabase("");
+        setPensaoAlimenticia(0);
+        setPath(null);
+        setOpen(false);
+        setContribPrevidenciaOficial(0);
+        setDependenteQtd(0);
+        setEhDeclaracaoSimplificada(0);
+        setNascimento("");
+        setOutrasDeducoes(0);
+        setValorBruto(0);
+    }
+
+    const [database, setDatabase] = useState("");
+    const [valorBruto, setValorBruto] = useState(0);
+    const [path, setPath] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [openSucesso, setOpenSucesso] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [contribPrevidenciaOficial, setContribPrevidenciaOficial] = useState(0);
+    const [dependenteQtd, setDependenteQtd] = useState(0);
+    const [pensaoAlimenticia, setPensaoAlimenticia] = useState(0);
+    const [ehDeclaracaoSimplificada, setEhDeclaracaoSimplificada] = useState(0);
+    const [nascimento, setNascimento] = useState("");
+    const [outrasDeducoes, setOutrasDeducoes] = useState(0);
 
     const generateFile = () => {
         setOpenSucesso(false);
@@ -86,30 +87,32 @@ function SimuladorRegressivo() {
         let form = new FormData();
         let errors = [];
         form.append("sheets", path);
-        form.append("database", database);
-        form.append("instituicao", instituicao);
-        form.append("mes", mes);
-        form.append("ano", ano);
-        form.append("nome", nomeResp);
-        form.append("email", emailResp);
-        form.append("telefone", telResp);
-        form.append("remessa", remessa);
+        form.append("data_referencia", database);
+        form.append("valor_bruto", valorBruto);
+        form.append("contrib_previdencia_oficial", contribPrevidenciaOficial);
+        form.append("dependente_qtd", dependenteQtd);
+        form.append("pensao_alimenticia", pensaoAlimenticia);
+        form.append("eh_declaracao_simplificada", ehDeclaracaoSimplificada);
+        form.append("nascimento", nascimento);
+        form.append("outras_deducoes", outrasDeducoes);
 
-        if (!path || !path.name) errors.push("Selecione uma planilha!")
-        if (!database) errors.push("Preencha a data de geração do arquivo!")
-        if (!instituicao) errors.push("Preencha os dados da instituição!")
-        if (!remessa) errors.push("Preencha o tipo de envio!")
-        if (!mes) errors.push("Preencha os dados do mês do registro!")
-        if (!ano) errors.push("Preencha os dados do ano do registro!")
-        if (!nomeResp) errors.push("Preencha os dados do nome do responsável!")
-        if (!emailResp) errors.push("Preencha os dados do email do responsável!")
-        if (!telResp) errors.push("Preencha os dados do telefone do responsável!")
-        if (database.toString().length > 10) errors.push("Data de geração do arquivo deve seguir o padrão (AAAA-MM-DD). EX: 2023-03-10")
-        if (database.toString().length < 10) errors.push("Data de geração do arquivo deve seguir o padrão (AAAA-MM-DD). EX: 2023-03-10")
-        if (instituicao.toString().length > 8) errors.push("O CNPJ da Instituição deve seguir o padrão (00000000). EX: 12345678")
-        if (telResp.toString().length != 11) errors.push("O campo telefone aceita apenas 11 dígitos. EX: 99999999999")
-        if (ano.toString().length != 4) errors.push("O campo ano aceita apenas 4 dígitos. EX: 2024")
-        if (mes.toString().length != 2) errors.push("O campo mes aceita apenas 2 dígitos. EX: 10")
+        //EXEMPLO DE VALIDAÇÕES DE INPUT
+
+        // if (!path || !path.name) errors.push("Selecione uma planilha!")
+        // if (!database) errors.push("Preencha a data de geração do arquivo!")
+        // if (!instituicao) errors.push("Preencha os dados da instituição!")
+        // if (!remessa) errors.push("Preencha o tipo de envio!")
+        // if (!mes) errors.push("Preencha os dados do mês do registro!")
+        // if (!ano) errors.push("Preencha os dados do ano do registro!")
+        // if (!nomeResp) errors.push("Preencha os dados do nome do responsável!")
+        // if (!emailResp) errors.push("Preencha os dados do email do responsável!")
+        // if (!telResp) errors.push("Preencha os dados do telefone do responsável!")
+        // if (database.toString().length > 10) errors.push("Data de geração do arquivo deve seguir o padrão (AAAA-MM-DD). EX: 2023-03-10")
+        // if (database.toString().length < 10) errors.push("Data de geração do arquivo deve seguir o padrão (AAAA-MM-DD). EX: 2023-03-10")
+        // if (instituicao.toString().length > 8) errors.push("O CNPJ da Instituição deve seguir o padrão (00000000). EX: 12345678")
+        // if (telResp.toString().length != 11) errors.push("O campo telefone aceita apenas 11 dígitos. EX: 99999999999")
+        // if (ano.toString().length != 4) errors.push("O campo ano aceita apenas 4 dígitos. EX: 2024")
+        // if (mes.toString().length != 2) errors.push("O campo mes aceita apenas 2 dígitos. EX: 10")
 
         if (errors.length > 0) {
             let stringError = "Erros encontrados: "
@@ -122,20 +125,20 @@ function SimuladorRegressivo() {
             setOpen(true);
         } else {
             setOpenSucesso(true);
-            console.log(path, database, instituicao, remessa, form);
-            axios.post('/api/simulador-regressivo', form, {
+            console.log(path, database, form);
+            axios.post('http://localhost:3001/api/simulador', form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(res => {
                 console.log(res, "Retornou")
-                setOpenSucesso(false);
-                if (res.data && !res.data.err) {
+                if (res?.data && !res?.data?.err) {
                     //PROCESSA DOWNLOAD AQUI FABIAN É NECESSÁRIO PENSAR NO FORMATO DE SAÍDA, UMA NOVA INTERFACE OU UM RESULTADO NA PRÓPRIA TELA, AQUI ELE VAI PEGAR O RETORNO E JOGAR PARA UM XML
-                    handleSaveXml(instituicao, res.data.data);
-                    resetForm()
+                    // handleSaveXml(instituicao, res.data.data);
+                    // resetForm()
+                    console.log(res, "retornooou")
                 }
-                if (res.data.err) {
+                if (res.data?.err) {
                     setErrorMsg(res.data.err);
                     setOpen(true);
                 }
@@ -143,7 +146,6 @@ function SimuladorRegressivo() {
                 console.log(err, "Retornou erro")
                 resetForm();
                 setOpenSucesso(false);
-                console.error(err);
                 setErrorMsg(err);
                 setOpen(true);
             });
@@ -154,8 +156,10 @@ function SimuladorRegressivo() {
         <header className="App-header">
             <Container >
                 <Grid container spacing={2}>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={6}>
+                        <SimuladorProgressivo />
+                    </Grid>
+                    <Grid item xs={6}>
                         <Box>
                             <Alert severity="info"> Simulador Regressivo de renda
                             </Alert>
@@ -196,18 +200,17 @@ function SimuladorRegressivo() {
                                         </IconButton>
                                     }
                                 >
-                                    Aguarde o processamento dos arquivos...
+                                    VAMOS COLOCAR AQUI OS RESULTADOS DO CALCULO
                                 </Alert>
                             </Collapse>
                         </Box>
-
                         <TextField
                             fullWidth
                             margin="normal"
-                            value={instituicao}
-                            onChange={(e) => setInstituicao(e.target.value)}
-                            label="ISPB ou os 8 (oito) primeiros dígitos do CNPJ da instituição (ou da instituição líder do conglomerado financeiro)"
-                            type="text"
+                            value={valorBruto}
+                            onChange={(e) => setValorBruto(e.target.value)}
+                            label="Valor Bruto"
+                            type="number"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -221,7 +224,7 @@ function SimuladorRegressivo() {
                             margin="normal"
                             value={database}
                             onChange={(e) => setDatabase(e.target.value)}
-                            type="text"
+                            type="date"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -229,13 +232,13 @@ function SimuladorRegressivo() {
                         />
 
                         <TextField
-                            id="ano"
+                            id="contribprevoficial"
                             fullWidth
                             margin="normal"
-                            value={ano}
-                            onChange={(e) => setAno(e.target.value)}
-                            label="Ano referência (Fomato ex: 2024)"
-                            type="text"
+                            value={contribPrevidenciaOficial}
+                            onChange={(e) => setContribPrevidenciaOficial(e.target.value)}
+                            label="Valor de contribuição de previdência oficial"
+                            type="number"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -243,13 +246,13 @@ function SimuladorRegressivo() {
                         />
 
                         <TextField
-                            id="mes"
+                            id="depqtd"
                             fullWidth
                             margin="normal"
-                            value={mes}
-                            onChange={(e) => setMes(e.target.value)}
-                            label="Mês referência (01 - 12) (Fomato ex: 10)"
-                            type="text"
+                            value={dependenteQtd}
+                            onChange={(e) => setDependenteQtd(e.target.value)}
+                            label="Quantidade de dependentes"
+                            type="number"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -257,13 +260,13 @@ function SimuladorRegressivo() {
                         />
 
                         <TextField
-                            id="nome"
+                            id="pensaoalim"
                             fullWidth
                             margin="normal"
-                            value={nomeResp}
-                            onChange={(e) => setNomeResp(e.target.value)}
-                            label="Nome do responsável (Fomato ex: Fulano de tal)"
-                            type="text"
+                            value={pensaoAlimenticia}
+                            onChange={(e) => setPensaoAlimenticia(e.target.value)}
+                            label="Valor pensão alimentícia"
+                            type="number"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -271,13 +274,13 @@ function SimuladorRegressivo() {
                         />
 
                         <TextField
-                            id="email"
+                            id="declaracaosimplif"
                             fullWidth
                             margin="normal"
-                            value={emailResp}
-                            onChange={(e) => setEmail(e.target.value)}
-                            label="E-mail do responsável (Fomato ex: fulano@dominio.com)"
-                            type="text"
+                            value={ehDeclaracaoSimplificada}
+                            onChange={(e) => setEhDeclaracaoSimplificada(e.target.value)}
+                            label="É declaração simplificada"
+                            type="number"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
@@ -285,32 +288,32 @@ function SimuladorRegressivo() {
                         />
 
                         <TextField
-                            id="telefone"
+                            id="nascimento"
                             fullWidth
                             margin="normal"
-                            value={telResp}
-                            onChange={(e) => setTelResp(e.target.value)}
-                            label="Telefone do responsável (Fomato ex: 99999999999)"
-                            type="text"
+                            value={nascimento}
+                            onChange={(e) => setNascimento(e.target.value)}
+                            label="Data de nascimento"
+                            type="date"
                             variant="filled"
                             InputLabelProps={{
                                 shrink: true,
                             }}
                         />
 
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-label">Tipo de Envio</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="filled-full-width"
-                                fullWidth
-                                value={remessa}
-                                onChange={(e) => setRemessa(e.target.value)}
-                            >
-                                <MenuItem value={"I"}>Inclusão</MenuItem>
-                                <MenuItem value={"S"}>Substituição</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            id="outrasdeducoes"
+                            fullWidth
+                            margin="normal"
+                            value={outrasDeducoes}
+                            onChange={(e) => setOutrasDeducoes(e.target.value)}
+                            label="Outras deduções"
+                            type="number"
+                            variant="filled"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
 
                         <TextField
                             id="filled-full-width"

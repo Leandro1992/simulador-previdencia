@@ -36,6 +36,7 @@
   "dependencies": {
     "adm-zip": "^0.5.10",
     "convert-excel-to-json": "git+https://github.com/Leandro1992/convert-excel-to-json.git",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "formidable": "^1.2.2",
     "js2xmlparser": "^4.0.1",
