@@ -1,6 +1,7 @@
 'use strict';
 
 const util = require('../util')
+const {Calculo_ir_progressiva, calcular_ir_progressiva_mensal} = require('../util/use_cases/calculo_progressiva/calculo_progressiva')
 const excelToJson = require('convert-excel-to-json');
 
 const checkSheetsData = (files) => {
