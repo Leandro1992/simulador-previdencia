@@ -8,7 +8,8 @@ let simulacao_referencia = new Calculo_ir_progressiva(
     0,// dependente_qtd, 
     0,// pensao_alimenticia, 
     0,// eh_declaracao_simplificada
-    new Date()
+    new Date(), //data nascimento
+    0,// eh_declaracao_simplificada
 )
 
 // Padrão INSS vigente em 01/01/2024
@@ -125,4 +126,20 @@ test('IR para R$ 15mil (01/01/2024) contribuição previdência oficial R$ 1k e 
     expect(resultado.valor_liquido).toBeCloseTo(13047.17,2),
     expect(resultado.imposto).toBeCloseTo(1952.83,2),
     expect(resultado.aliquota_efetiva).toBeCloseTo(0.1302,4)
+})
+
+test('IR para R$ 15mil (01/01/2024) contribuição previdência oficial R$ 1k e desconto por idade e 3 dependentes e R$ 1k pensão alimenticia e 1k outras deduções', ()=>{
+    let simulacao = simulacao_referencia;
+    simulacao.valor_bruto = 15000;
+    simulacao.contrib_previdencia_oficial = 1000;
+    simulacao.dataNascimento = new Date("1904-10-01T00:00:00Z");
+    simulacao.dependente_qtd = 3;
+    simulacao.pensao_alimenticia = 1000;
+    simulacao.outras_deducoes = 1000;
+    
+    let resultado = calcular_ir_progressiva_mensal(simulacao);
+    expect(resultado.valor_base).toBeCloseTo(9319.23,2),
+    expect(resultado.valor_liquido).toBeCloseTo(13322.17,2),
+    expect(resultado.imposto).toBeCloseTo(1677.83,2),
+    expect(resultado.aliquota_efetiva).toBeCloseTo(0.1119,4)
 })

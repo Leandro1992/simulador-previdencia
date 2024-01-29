@@ -2,7 +2,7 @@ const tabela_vigente = require('../../config/tabela_progressiva');
 const getIdade = require('../../shared/calculo_idade')
 
 
-function Calculo_ir_progressiva(data_referencia, valor_bruto, contrib_previdencia_oficial, dependente_qtd, pensao_alimenticia, eh_declaracao_simplificada, dataNascimento) {
+function Calculo_ir_progressiva(data_referencia, valor_bruto, contrib_previdencia_oficial, dependente_qtd, pensao_alimenticia, eh_declaracao_simplificada, dataNascimento, outras_deducoes) {
     this.data_referencia = new Date(data_referencia);
     this.valor_bruto = valor_bruto;
     this.contrib_previdencia_oficial = contrib_previdencia_oficial;
@@ -10,6 +10,7 @@ function Calculo_ir_progressiva(data_referencia, valor_bruto, contrib_previdenci
     this.pensao_alimenticia = pensao_alimenticia;
     this.eh_declaracao_simplificada = eh_declaracao_simplificada;
     this.dataNascimento = dataNascimento;
+    this.outras_deducoes = outras_deducoes;
 }
 
 
@@ -25,12 +26,14 @@ function calcular_ir_progressiva_mensal(Calculo_ir_progressiva) {
     let valor_declaracao_simplificada = Calculo_ir_progressiva.eh_declaracao_simplificada === 1? tabela.valor_deducao_declaracao_simplificada+0:0;
     let idade_deducao_por_idade = tabela.deducao_por_idade.idade;
     let valor_deducao_por_idade = idade_simulado >= idade_deducao_por_idade ? tabela.deducao_por_idade.valor_deducao_por_idade : 0;
+    let outras_deducoes = Calculo_ir_progressiva.outras_deducoes +0;
     
     let valor_deducoes = 
         (valor_contrib_previdencia_oficial + 
         valor_deducao_dependentes + 
         valor_pensao_alimenticia + 
-        valor_deducao_por_idade) + 0 ;
+        valor_deducao_por_idade +
+        outras_deducoes) + 0 ;
 
     valor_deducoes = valor_declaracao_simplificada > valor_deducoes ? valor_declaracao_simplificada : valor_deducoes;
     

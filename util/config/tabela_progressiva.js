@@ -7,7 +7,7 @@ function Tabela(faixas, valor_deducao_declaracao_simplificada, valor_deducao_por
 
 }
 
-function tabela_progressiva_vigente(data){ 
+function get_tabela_progressiva_vigente(data){ 
     const dataReferencia = new Date(data);
     let faixas = [{ordem:0, valor:0, ir:0}]
     let valor_deducao_declaracao_simplificada = 0;
@@ -45,4 +45,4 @@ function tabela_progressiva_vigente(data){
     return tabela
 }
 
-module.exports = tabela_progressiva_vigente;
+module.exports = get_tabela_progressiva_vigente;
